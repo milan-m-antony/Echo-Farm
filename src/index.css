@@ -8,46 +8,46 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 140 30% 97%;
-    --foreground: 140 25% 10%;
+    --background: 120 34% 95%;
+    --foreground: 103 7% 48%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 140 25% 10%;
+    --card: 120 34% 98%;
+    --card-foreground: 103 7% 48%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 140 25% 10%;
+    --popover: 120 34% 98%;
+    --popover-foreground: 103 7% 48%;
 
-    --primary: 142 76% 36%;
+    --primary: 126 44% 65%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 140 20% 94%;
-    --secondary-foreground: 140 25% 10%;
+    --secondary: 120 34% 82%;
+    --secondary-foreground: 103 7% 48%;
 
-    --muted: 140 20% 94%;
-    --muted-foreground: 140 10% 45%;
+    --muted: 138 10% 75%;
+    --muted-foreground: 103 7% 48%;
 
-    --accent: 142 60% 45%;
+    --accent: 123 20% 59%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 140 20% 88%;
-    --input: 140 20% 88%;
-    --ring: 142 76% 36%;
+    --border: 138 10% 75%;
+    --input: 138 10% 75%;
+    --ring: 126 44% 65%;
 
     --radius: 1rem;
     
     /* Glassmorphic tokens */
-    --glass: 0 0% 100% / 0.1;
-    --glass-border: 0 0% 100% / 0.2;
-    --glass-heavy: 0 0% 100% / 0.2;
+    --glass: 120 34% 82% / 0.15;
+    --glass-border: 126 44% 65% / 0.25;
+    --glass-heavy: 120 34% 82% / 0.3;
     
     /* Gradients */
-    --gradient-eco: linear-gradient(135deg, hsl(142 76% 36%) 0%, hsl(160 70% 42%) 100%);
-    --gradient-glass: linear-gradient(135deg, hsl(0 0% 100% / 0.1) 0%, hsl(0 0% 100% / 0.05) 100%);
-    --gradient-mesh: radial-gradient(at 0% 0%, hsl(142 76% 36% / 0.2) 0px, transparent 50%),
-                     radial-gradient(at 100% 100%, hsl(160 70% 42% / 0.2) 0px, transparent 50%);
+    --gradient-eco: linear-gradient(135deg, hsl(126 44% 65%) 0%, hsl(123 20% 59%) 100%);
+    --gradient-glass: linear-gradient(135deg, hsl(120 34% 82% / 0.2) 0%, hsl(138 10% 75% / 0.1) 100%);
+    --gradient-mesh: radial-gradient(at 0% 0%, hsl(126 44% 65% / 0.15) 0px, transparent 50%),
+                     radial-gradient(at 100% 100%, hsl(123 20% 59% / 0.15) 0px, transparent 50%);
 
     --radius: 1rem;
 
@@ -69,38 +69,38 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 140 30% 6%;
-    --foreground: 140 15% 95%;
+    --background: 103 7% 12%;
+    --foreground: 120 34% 82%;
 
-    --card: 140 25% 8%;
-    --card-foreground: 140 15% 95%;
+    --card: 103 7% 15%;
+    --card-foreground: 120 34% 82%;
 
-    --popover: 140 25% 8%;
-    --popover-foreground: 140 15% 95%;
+    --popover: 103 7% 15%;
+    --popover-foreground: 120 34% 82%;
 
-    --primary: 142 70% 45%;
+    --primary: 126 44% 65%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 140 20% 12%;
-    --secondary-foreground: 140 15% 95%;
+    --secondary: 103 7% 20%;
+    --secondary-foreground: 120 34% 82%;
 
-    --muted: 140 20% 12%;
-    --muted-foreground: 140 10% 60%;
+    --muted: 103 7% 25%;
+    --muted-foreground: 138 10% 75%;
 
-    --accent: 142 60% 50%;
+    --accent: 123 20% 59%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 140 15% 95%;
+    --destructive-foreground: 120 34% 82%;
 
-    --border: 140 20% 18%;
-    --input: 140 20% 18%;
-    --ring: 142 70% 45%;
+    --border: 103 7% 30%;
+    --input: 103 7% 30%;
+    --ring: 126 44% 65%;
     
     /* Glassmorphic tokens for dark mode */
-    --glass: 0 0% 0% / 0.3;
-    --glass-border: 0 0% 100% / 0.1;
-    --glass-heavy: 0 0% 0% / 0.5;
+    --glass: 103 7% 15% / 0.4;
+    --glass-border: 126 44% 65% / 0.2;
+    --glass-heavy: 103 7% 15% / 0.6;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
