@@ -1,8 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import RotatingEarth from "@/components/ui/wireframe-dotted-globe";
 import { Leaf, Globe, Sprout, TrendingUp, Users, Shield } from "lucide-react";
 
 const Index = () => {
+  const navigate = useNavigate();
+  
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -82,10 +85,10 @@ const Index = () => {
             </p>
             
             <div className="flex flex-wrap gap-4 justify-center">
-              <Button size="lg" className="rounded-xl bg-gradient-eco text-white hover:opacity-90 transition-opacity">
+              <Button size="lg" className="rounded-xl bg-gradient-eco text-white hover:opacity-90 transition-opacity" onClick={() => navigate("/auth")}>
                 Start Your Journey
               </Button>
-              <Button size="lg" variant="outline" className="rounded-xl backdrop-blur-xl bg-glass-heavy border-glass-border hover:bg-glass transition-all">
+              <Button size="lg" variant="outline" className="rounded-xl backdrop-blur-xl bg-glass-heavy border-glass-border hover:bg-glass transition-all" onClick={() => scrollToSection("features")}>
                 Learn More
               </Button>
             </div>
