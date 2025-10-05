@@ -49,6 +49,9 @@ const Analysis = () => {
                   <stop offset="95%" stopColor={color} stopOpacity={0}/>
                 </linearGradient>
               </defs>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis />
               <Area type="monotone" dataKey="value" stroke={color} fillOpacity={1} fill={`url(#color-${param})`} />
               <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
             </AreaChart>
@@ -64,9 +67,9 @@ const Analysis = () => {
     const latestValue = chartData[chartData.length - 1].value;
     switch(param) {
       case 'T2M': return `${latestValue.toFixed(1)}°C`;
-      case 'PRECTOT': return `${latestValue.toFixed(1)} mm/day`;
+      case 'PRECTOT': return `${latestValue.toFixed(2)} mm/day`;
       case 'RH2M': return `${latestValue.toFixed(1)}%`;
-      case 'WS10M': return `${latestValue.toFixed(1)} m/s`;
+      case 'WS10M': return `${latestValue.toFixed(2)} m/s`;
       default: return latestValue;
     }
   };

@@ -4,6 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
@@ -19,6 +20,7 @@ const icon = L.icon({
 const MapView = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [mapLocation, setMapLocation] = useState<any>(null);
   const [loadingWeather, setLoadingWeather] = useState(false);
 
@@ -37,17 +39,27 @@ const MapView = () => {
     try {
       const lat = parseFloat(mapLocation.lat);
       const lon = parseFloat(mapLocation.lon);
-      const endDate = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-      const startDate = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10).replace(/-/g, "");
+      // Use fixed dates to ensure data availability (Jan 1-10, 2024)
+      const startDate = "20240101";
+      const endDate = "20240110";
 
       const response = await fetch(
         `https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,PRECTOT,RH2M,WS10M&start=${startDate}&end=${endDate}&latitude=${lat}&longitude=${lon}&community=AG&format=JSON`
       );
+
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
+
       const weatherData = await response.json();
       navigate('/analysis', { state: { location: mapLocation, weatherData } });
     } catch (error) {
       console.error("Failed to fetch weather data", error);
-      // Handle error, e.g., show a toast message
+      toast({
+        title: "Data Fetch Failed",
+        description: "Unable to retrieve weather data. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setLoadingWeather(false);
     }
