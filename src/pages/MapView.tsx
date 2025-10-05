@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
@@ -20,6 +20,7 @@ const MapView = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [mapLocation, setMapLocation] = useState<any>(null);
+  const [loadingWeather, setLoadingWeather] = useState(false);
 
   useEffect(() => {
     if (location.state?.location) {
@@ -29,8 +30,31 @@ const MapView = () => {
     }
   }, [location, navigate]);
 
+  const handleExplore = async () => {
+    if (!mapLocation) return;
+
+    setLoadingWeather(true);
+    try {
+      const lat = parseFloat(mapLocation.lat);
+      const lon = parseFloat(mapLocation.lon);
+      const endDate = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+      const startDate = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10).replace(/-/g, "");
+
+      const response = await fetch(
+        `https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,PRECTOT,RH2M,WS10M&start=${startDate}&end=${endDate}&latitude=${lat}&longitude=${lon}&community=AG&format=JSON`
+      );
+      const weatherData = await response.json();
+      navigate('/analysis', { state: { location: mapLocation, weatherData } });
+    } catch (error) {
+      console.error("Failed to fetch weather data", error);
+      // Handle error, e.g., show a toast message
+    } finally {
+      setLoadingWeather(false);
+    }
+  };
+
   if (!mapLocation) {
-    return null;
+    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
   }
 
   const lat = parseFloat(mapLocation.lat);
@@ -38,29 +62,26 @@ const MapView = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="sticky top-0 z-50 bg-glass border-b border-glass-border backdrop-blur-xl">
         <div className="container mx-auto px-4 py-4 flex items-center gap-4">
           <Button variant="outline" size="sm" onClick={() => navigate("/dashboard")}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Dashboard
           </Button>
-          <h1 className="text-xl font-bold text-foreground">Location Map</h1>
+          <h1 className="text-xl font-bold text-foreground">Location Details</h1>
         </div>
       </header>
 
-      {/* Map Container */}
       <div className="container mx-auto px-4 py-6">
         <div className="grid lg:grid-cols-3 gap-6">
-          {/* Map */}
           <div className="lg:col-span-2">
-            <Card className="overflow-hidden">
+            <Card className="overflow-hidden bg-glass border-glass-border backdrop-blur-xl">
               <div className="h-[600px]">
                 <MapContainer
                   center={[lat, lon]}
                   zoom={13}
                   scrollWheelZoom={false}
-                  style={{ height: "100%", width: "100%" }}
+                  style={{ height: "100%", width: "100%", backgroundColor: "transparent" }}
                 >
                   <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -80,23 +101,18 @@ const MapView = () => {
             </Card>
           </div>
 
-          {/* Location Info */}
-          <div>
+          <div className="space-y-6">
             <Card className="bg-glass border-glass-border backdrop-blur-xl">
               <CardHeader>
                 <CardTitle>Location Details</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <h3 className="text-sm font-semibold text-foreground/60 mb-1">
-                    Location
-                  </h3>
+                  <h3 className="text-sm font-semibold text-foreground/60 mb-1">Location</h3>
                   <p className="text-sm">{mapLocation.display_name}</p>
                 </div>
                 <div>
-                  <h3 className="text-sm font-semibold text-foreground/60 mb-1">
-                    Coordinates
-                  </h3>
+                  <h3 className="text-sm font-semibold text-foreground/60 mb-1">Coordinates</h3>
                   <p className="text-sm">
                     Latitude: {lat.toFixed(6)}
                     <br />
@@ -105,12 +121,13 @@ const MapView = () => {
                 </div>
                 {mapLocation.type && (
                   <div>
-                    <h3 className="text-sm font-semibold text-foreground/60 mb-1">
-                      Type
-                    </h3>
+                    <h3 className="text-sm font-semibold text-foreground/60 mb-1">Type</h3>
                     <p className="text-sm capitalize">{mapLocation.type}</p>
                   </div>
                 )}
+                <Button className="w-full mt-4" onClick={handleExplore} disabled={loadingWeather}>
+                  {loadingWeather ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Explore Data"}
+                </Button>
               </CardContent>
             </Card>
           </div>

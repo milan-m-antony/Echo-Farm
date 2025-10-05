@@ -305,9 +305,7 @@ export default function RotatingEarth({ width = 800, height = 600, className = "
           <div className="text-muted-foreground">Loading Earth...</div>
         </div>
       )}
-      <div className="absolute bottom-4 left-4 text-xs text-muted-foreground px-3 py-2 rounded-lg bg-glass border border-glass-border backdrop-blur-sm">
-        Drag to rotate • Scroll to zoom
-      </div>
+    
     </div>
   )
 }

@@ -60,7 +60,7 @@ const Index = () => {
                     Impact
                   </button>
                 </div>
-                <Button variant="default" size="sm" className="rounded-xl">
+                <Button variant="default" size="sm" className="rounded-xl" onClick={() => navigate("/auth")}>
                   Get Started
                 </Button>
               </div>
@@ -276,7 +276,7 @@ const Index = () => {
                 <p className="text-xl text-foreground/90 mb-8 max-w-2xl mx-auto">
                   Join thousands of farmers worldwide who are building a sustainable future.
                 </p>
-                <Button size="lg" className="rounded-xl bg-gradient-eco text-white hover:opacity-90 transition-opacity">
+                <Button size="lg" className="rounded-xl bg-gradient-eco text-white hover:opacity-90 transition-opacity" onClick={() => navigate("/auth")}>
                   Get Started Today
                 </Button>
               </div>
