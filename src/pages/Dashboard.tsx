@@ -14,6 +14,7 @@ const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searching, setSearching] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -48,14 +49,21 @@ const Dashboard = () => {
     navigate("/");
   };
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
+  const handleSearchInput = async (value: string) => {
+    setSearchQuery(value);
+    
+    if (!value.trim()) {
+      setSearchResults([]);
+      setShowSuggestions(false);
+      return;
+    }
 
     setSearching(true);
+    setShowSuggestions(true);
+    
     try {
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&limit=5`
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}&limit=5`
       );
       const data = await response.json();
       setSearchResults(data);
@@ -77,7 +85,14 @@ const Dashboard = () => {
     }
   };
 
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+    handleSearchInput(searchQuery);
+  };
+
   const handleLocationSelect = (location: any) => {
+    setShowSuggestions(false);
     navigate("/map", { state: { location } });
   };
 
@@ -108,63 +123,70 @@ const Dashboard = () => {
         <main className="container mx-auto px-4 py-12 pointer-events-auto">
           <div className="max-w-2xl mx-auto space-y-8">
             {/* Welcome Card */}
-            <Card className="bg-glass border-glass-border backdrop-blur-xl">
+            <Card className="bg-glass-heavy border-glass-border backdrop-blur-xl shadow-2xl">
               <CardHeader>
-                <CardTitle className="text-3xl text-center">
+                <CardTitle className="text-3xl text-center bg-gradient-eco bg-clip-text text-transparent">
                   Welcome to EchoFarm
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <p className="text-center text-foreground/90">
+                <p className="text-center text-foreground/90 text-lg">
                   Search for locations to explore agricultural data and insights
                 </p>
 
                 {/* Search Form */}
-                <form onSubmit={handleSearch} className="flex gap-2">
-                  <Input
-                    type="text"
-                    placeholder="Search for a location..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    disabled={searching}
-                    className="flex-1"
-                  />
-                  <Button type="submit" disabled={searching}>
-                    <Search className="mr-2 h-4 w-4" />
-                    {searching ? "Searching..." : "Search"}
-                  </Button>
-                </form>
-
-                {/* Search Results */}
-                {searchResults.length > 0 && (
-                  <div className="space-y-2">
-                    <h3 className="font-semibold text-sm text-foreground/80">
-                      Search Results:
-                    </h3>
-                    <div className="space-y-2">
-                      {searchResults.map((result, index) => (
-                        <button
-                          key={index}
-                          onClick={() => handleLocationSelect(result)}
-                          className="w-full p-3 text-left rounded-lg bg-background/50 hover:bg-background/80 border border-glass-border transition-colors"
-                        >
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <p className="font-medium text-foreground">
-                                {result.display_name}
-                              </p>
-                              <p className="text-xs text-foreground/60 mt-1">
-                                Lat: {parseFloat(result.lat).toFixed(4)}, Lon:{" "}
-                                {parseFloat(result.lon).toFixed(4)}
-                              </p>
-                            </div>
-                            <Map className="h-5 w-5 text-primary ml-2 flex-shrink-0" />
-                          </div>
-                        </button>
-                      ))}
+                <div className="relative">
+                  <form onSubmit={handleSearch} className="flex gap-2">
+                    <div className="relative flex-1">
+                      <Input
+                        type="text"
+                        placeholder="Search for a location..."
+                        value={searchQuery}
+                        onChange={(e) => handleSearchInput(e.target.value)}
+                        onFocus={() => searchResults.length > 0 && setShowSuggestions(true)}
+                        disabled={searching}
+                        className="flex-1 bg-background/60 backdrop-blur-sm border-glass-border focus:bg-background/80 transition-all"
+                      />
+                      {searching && (
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                          <div className="h-4 w-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                        </div>
+                      )}
                     </div>
-                  </div>
-                )}
+                    <Button type="submit" disabled={searching} className="bg-gradient-eco hover:opacity-90">
+                      <Search className="mr-2 h-4 w-4" />
+                      Search
+                    </Button>
+                  </form>
+
+                  {/* Auto-suggest Dropdown */}
+                  {showSuggestions && searchResults.length > 0 && (
+                    <div className="absolute z-50 w-full mt-2 bg-glass-heavy backdrop-blur-xl border border-glass-border rounded-lg shadow-2xl overflow-hidden">
+                      <div className="max-h-80 overflow-y-auto">
+                        {searchResults.map((result, index) => (
+                          <button
+                            key={index}
+                            onClick={() => handleLocationSelect(result)}
+                            className="w-full p-4 text-left hover:bg-background/40 border-b border-glass-border/50 last:border-b-0 transition-all group"
+                          >
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1 pr-2">
+                                <p className="font-medium text-foreground group-hover:text-primary transition-colors">
+                                  {result.display_name}
+                                </p>
+                                <p className="text-xs text-foreground/60 mt-1">
+                                  Lat: {parseFloat(result.lat).toFixed(4)}, Lon:{" "}
+                                  {parseFloat(result.lon).toFixed(4)}
+                                </p>
+                              </div>
+                              <Map className="h-5 w-5 text-primary ml-2 flex-shrink-0 group-hover:scale-110 transition-transform" />
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
           </div>
