@@ -1,4 +1,4 @@
-const apiKey = "";
+const apiKey = import.meta.env.VITE_HUGGINGFACE_API_KEY || "";
 
 export async function getCropRecommendations(lat: number, lon: number) {
   const prompt = `
