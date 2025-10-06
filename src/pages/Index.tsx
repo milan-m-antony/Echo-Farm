@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import RotatingEarth from "@/components/ui/wireframe-dotted-globe";
 import { Leaf, Globe, Sprout, TrendingUp, Users, Shield } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -60,9 +61,12 @@ const Index = () => {
                     Impact
                   </button>
                 </div>
-                <Button variant="default" size="sm" className="rounded-xl" onClick={() => navigate("/auth")}>
-                  Get Started
-                </Button>
+                <div className="flex items-center gap-3">
+                  <ThemeToggle />
+                  <Button variant="default" size="sm" className="rounded-xl" onClick={() => navigate("/auth")}>
+                    Get Started
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
