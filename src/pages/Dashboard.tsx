@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Search, Loader2, Map } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
+import RotatingEarth from "@/components/ui/wireframe-dotted-globe";
 
 const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -61,29 +62,30 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen p-6 bg-gradient-to-br from-background via-background to-background/80">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Welcome Header */}
-        <div className="bg-glass-heavy backdrop-blur-xl border border-glass-border rounded-3xl p-8 shadow-2xl">
-          <h1 className="text-4xl font-bold mb-2">
-            Welcome to <span className="text-gradient">EchoFarm</span>
-          </h1>
-          <p className="text-foreground/80 text-lg">
-            Search for locations to explore agricultural data, weather patterns, and sustainable farming insights
-          </p>
-        </div>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Fixed Background Globe */}
+      <div className="fixed inset-0 z-0 pointer-events-auto">
+        <RotatingEarth 
+          width={typeof window !== 'undefined' ? window.innerWidth : 1920} 
+          height={typeof window !== 'undefined' ? window.innerHeight : 1080}
+          className="w-full h-full"
+        />
+      </div>
 
-        {/* Search Card */}
-        <Card className="bg-glass-heavy border-glass-border backdrop-blur-xl shadow-2xl">
-          <CardContent className="p-8">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Search className="h-6 w-6 text-primary" />
-                <h2 className="text-2xl font-bold">Location Search</h2>
+      {/* Scrollable Content */}
+      <div className="relative z-10 pointer-events-none min-h-screen flex items-center justify-center px-6">
+        <div className="max-w-2xl w-full pointer-events-auto">
+          {/* Welcome Card with Search */}
+          <Card className="bg-glass-heavy backdrop-blur-xl border border-glass-border shadow-2xl">
+            <CardContent className="p-8 space-y-6">
+              <div className="text-center space-y-2">
+                <h1 className="text-4xl font-bold">
+                  Welcome to <span className="text-gradient">EchoFarm</span>
+                </h1>
+                <p className="text-foreground/80 text-lg">
+                  Search for locations to explore agricultural data and insights
+                </p>
               </div>
-              <p className="text-foreground/80 mb-6">
-                Enter a city, country, or region to get started
-              </p>
 
               <div className="relative">
                 <div className="relative">
@@ -130,24 +132,8 @@ const Dashboard = () => {
                   </div>
                 )}
               </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-glass-heavy backdrop-blur-xl border border-glass-border rounded-2xl p-6 hover:bg-glass transition-all hover:scale-105">
-            <div className="text-3xl font-bold text-primary mb-2">10K+</div>
-            <div className="text-foreground/80">Global Locations</div>
-          </div>
-          <div className="bg-glass-heavy backdrop-blur-xl border border-glass-border rounded-2xl p-6 hover:bg-glass transition-all hover:scale-105">
-            <div className="text-3xl font-bold text-primary mb-2">Real-time</div>
-            <div className="text-foreground/80">Weather Data</div>
-          </div>
-          <div className="bg-glass-heavy backdrop-blur-xl border border-glass-border rounded-2xl p-6 hover:bg-glass transition-all hover:scale-105">
-            <div className="text-3xl font-bold text-primary mb-2">AI-Powered</div>
-            <div className="text-foreground/80">Crop Analysis</div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
