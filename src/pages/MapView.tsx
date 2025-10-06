@@ -32,6 +32,47 @@ const MapView = () => {
     }
   }, [location, navigate]);
 
+  const validAGParameters = [
+    "T2M",
+    "T2M_MAX",
+    "T2M_MIN",
+    "PRECTOT",
+    "RH2M",
+    "WS10M",
+    "ALLSKY_SFC_SW_DWN",
+    "PS",
+    "T2MDEW",
+  ];
+
+  async function fetchAGWeatherData(lat: number, lon: number, startDate: string, endDate: string) {
+    try {
+      const params = validAGParameters.join(",");
+      const url = `https://power.larc.nasa.gov/api/temporal/daily/point?parameters=${params}&start=${startDate}&end=${endDate}&latitude=${lat}&longitude=${lon}&community=AG&format=JSON`;
+      console.log("Fetching NASA POWER API data from URL:", url);
+
+      const res = await fetch(url);
+      console.log("Fetch response status:", res.status);
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error(`NASA API error: ${res.status} - ${errorText}`);
+        throw new Error(`NASA API error: ${res.status} - ${errorText}`);
+      }
+
+      const data = await res.json();
+      console.log("Received data from NASA POWER API:", data);
+
+      if (!data.properties || !data.properties.parameter) {
+        throw new Error("Invalid data returned from NASA POWER API");
+      }
+
+      return data.properties.parameter;
+    } catch (err: any) {
+      console.error("Failed to fetch weather data:", err.message);
+      return null;
+    }
+  }
+
   const handleExplore = async () => {
     if (!mapLocation) return;
 
@@ -39,25 +80,27 @@ const MapView = () => {
     try {
       const lat = parseFloat(mapLocation.lat);
       const lon = parseFloat(mapLocation.lon);
-      // Use fixed dates to ensure data availability (Jan 1-10, 2024)
-      const startDate = "20240101";
-      const endDate = "20240110";
+      const startDate = "20230101";
+      const endDate = "20230107";
 
-      const response = await fetch(
-        `https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,PRECTOT,RH2M,WS10M&start=${startDate}&end=${endDate}&latitude=${lat}&longitude=${lon}&community=AG&format=JSON`
-      );
+      const parameters = await fetchAGWeatherData(lat, lon, startDate, endDate);
 
-      if (!response.ok) {
-        throw new Error(`API request failed with status ${response.status}`);
+      if (!parameters) {
+        throw new Error("No weather data received");
       }
 
-      const weatherData = await response.json();
-      navigate('/analysis', { state: { location: mapLocation, weatherData } });
+      const weatherData = {
+        properties: {
+          parameter: parameters,
+        },
+      };
+
+      navigate("/analysis", { state: { location: mapLocation, weatherData } });
     } catch (error) {
       console.error("Failed to fetch weather data", error);
       toast({
         title: "Data Fetch Failed",
-        description: "Unable to retrieve weather data. Please try again.",
+        description: `Unable to retrieve weather data: ${error.message}`,
         variant: "destructive",
       });
     } finally {

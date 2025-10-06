@@ -8,6 +8,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import MapView from "./pages/MapView";
 import Analysis from "./pages/Analysis";
+import GeminiAnalysis from "./pages/GeminiAnalysis";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/map" element={<MapView />} />
           <Route path="/analysis" element={<Analysis />} />
+          <Route path="/gemini-analysis" element={<GeminiAnalysis />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
