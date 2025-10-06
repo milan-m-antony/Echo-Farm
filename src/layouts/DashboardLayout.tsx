@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Home, Map, BarChart2, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const DashboardLayout = () => {
   const location = useLocation();
@@ -20,9 +21,12 @@ const DashboardLayout = () => {
   ];
 
   return (
-    <div className="min-h-screen flex bg-background text-white">
+    <div className="min-h-screen flex bg-background text-foreground">
       <aside className="w-64 bg-glass border-r border-glass-border p-4 flex flex-col">
-        <h2 className="text-2xl font-bold text-gradient mb-8">EchoFarm</h2>
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-2xl font-bold text-gradient">EchoFarm</h2>
+          <ThemeToggle />
+        </div>
         <nav className="flex-1 space-y-2">
           {navItems.map((item) => (
             <Link to={item.href} key={item.href}>
