@@ -63,13 +63,15 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Fixed Background Globe - Centered after sidebar */}
-      <div className="fixed inset-0 z-0 pointer-events-auto lg:left-64 transition-all duration-300">
-        <RotatingEarth 
-          width={typeof window !== 'undefined' ? window.innerWidth : 1920} 
-          height={typeof window !== 'undefined' ? window.innerHeight : 1080}
-          className="w-full h-full"
-        />
+      {/* Fixed Background Globe - Centered in main content area */}
+      <div className="fixed inset-0 lg:left-64 z-0 pointer-events-none flex items-center justify-center">
+        <div className="w-full h-full flex items-center justify-center">
+          <RotatingEarth 
+            width={800} 
+            height={800}
+            className="max-w-full max-h-full"
+          />
+        </div>
       </div>
 
       {/* Scrollable Content */}
