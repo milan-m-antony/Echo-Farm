@@ -253,7 +253,7 @@ export default function RotatingEarth({
       <canvas ref={canvasRef} style={{
       maxWidth: "100%",
       height: "auto"
-    }} className="w-full h-auto rounded-2xl mx-0 my-0 px-0 py-[37px]" />
+    }} className="w-full h-auto rounded-2xl mx-0 my-0 py-0 px-[26px]" />
       {isLoading && <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-muted-foreground">Loading Earth...</div>
         </div>}
