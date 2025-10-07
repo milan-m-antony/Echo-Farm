@@ -51,6 +51,14 @@ const DashboardLayout = () => {
 
   return (
     <div className="min-h-screen flex w-full bg-background text-foreground">
+      {/* Mobile Menu Button - Fixed position outside sidebar */}
+      <button
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+        className="fixed top-4 right-4 z-50 lg:hidden p-2 rounded-lg bg-glass-heavy backdrop-blur-xl border border-glass-border hover:bg-glass transition-all duration-300 hover:scale-110 shadow-lg"
+      >
+        {sidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+      </button>
+
       {/* Overlay for mobile */}
       {sidebarOpen && (
         <div
@@ -79,13 +87,6 @@ const DashboardLayout = () => {
               <Leaf className="w-6 h-6 text-primary animate-pulse" />
               <h2 className="text-2xl font-bold text-gradient">EchoFarm</h2>
             </Link>
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden p-2 rounded-lg bg-glass hover:bg-glass-heavy transition-all duration-300 hover:scale-110"
-            >
-              {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
           </div>
           <div className="flex items-center justify-between mt-4">
             <p className="text-sm text-muted-foreground truncate max-w-[140px]">
