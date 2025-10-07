@@ -5,13 +5,11 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Thermometer, CloudRain, Droplets, Wind, Sun, TrendingUp } from "lucide-react";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
-
 const Analysis = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [mapLocation, setMapLocation] = useState<any>(null);
   const [weatherData, setWeatherData] = useState<any>(null);
-
   useEffect(() => {
     console.log("Analysis page location state:", location.state);
     if (location.state?.location && location.state?.weatherData) {
@@ -24,18 +22,18 @@ const Analysis = () => {
       // navigate("/dashboard");
     }
   }, [location, navigate]);
-
   const getChartData = (param: string) => {
     if (!weatherData?.properties?.parameter?.[param]) return [];
     const paramData = weatherData.properties.parameter[param];
     return Object.keys(paramData).map(date => ({
-      date: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      value: paramData[date],
+      date: new Date(date).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric'
+      }),
+      value: paramData[date]
     }));
   };
-
-  const renderChart = (param: string, title: string, color: string, icon: React.ReactNode) => (
-    <Card className="bg-glass border-glass-border backdrop-blur-xl hover:scale-[1.02] transition-all duration-300 hover:shadow-lg">
+  const renderChart = (param: string, title: string, color: string, icon: React.ReactNode) => <Card className="bg-glass border-glass-border backdrop-blur-xl hover:scale-[1.02] transition-all duration-300 hover:shadow-lg">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
         {icon}
@@ -46,11 +44,16 @@ const Analysis = () => {
         </div>
         <div className="h-[100px] sm:h-[120px]">
           <ChartContainer config={{}} className="h-full w-full">
-            <AreaChart data={getChartData(param)} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+            <AreaChart data={getChartData(param)} margin={{
+            top: 5,
+            right: 10,
+            left: -20,
+            bottom: 0
+          }}>
               <defs>
                 <linearGradient id={`color-${param}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={color} stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor={color} stopOpacity={0}/>
+                  <stop offset="5%" stopColor={color} stopOpacity={0.8} />
+                  <stop offset="95%" stopColor={color} stopOpacity={0} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" />
@@ -62,37 +65,46 @@ const Analysis = () => {
           </ChartContainer>
         </div>
       </CardContent>
-    </Card>
-  );
-
+    </Card>;
   const getLatestValue = (param: string) => {
     const chartData = getChartData(param);
     if (chartData.length === 0) return "N/A";
     const latestValue = chartData[chartData.length - 1].value;
-    switch(param) {
-      case 'T2M': return `${latestValue.toFixed(1)}°C`;
-      case 'PRECTOT': return `${latestValue.toFixed(2)} mm/day`;
-      case 'RH2M': return `${latestValue.toFixed(1)}%`;
-      case 'WS10M': return `${latestValue.toFixed(2)} m/s`;
-      case 'ALLSKY_SFC_SW_DWN': return `${latestValue.toFixed(0)} W/m²`;
-      case 'PS': return `${latestValue.toFixed(0)} Pa`;
-      case 'T2MDEW': return `${latestValue.toFixed(1)}°C`;
-      case 'SOILM0_10': return `${latestValue.toFixed(3)} kg/m²`;
-      case 'SOILM10_40': return `${latestValue.toFixed(3)} kg/m²`;
-      case 'RHMAX': return `${latestValue.toFixed(1)}%`;
-      case 'RHMIN': return `${latestValue.toFixed(1)}%`;
-      case 'T2M_MAX': return `${latestValue.toFixed(1)}°C`;
-      case 'T2M_MIN': return `${latestValue.toFixed(1)}°C`;
-      default: return latestValue;
+    switch (param) {
+      case 'T2M':
+        return `${latestValue.toFixed(1)}°C`;
+      case 'PRECTOT':
+        return `${latestValue.toFixed(2)} mm/day`;
+      case 'RH2M':
+        return `${latestValue.toFixed(1)}%`;
+      case 'WS10M':
+        return `${latestValue.toFixed(2)} m/s`;
+      case 'ALLSKY_SFC_SW_DWN':
+        return `${latestValue.toFixed(0)} W/m²`;
+      case 'PS':
+        return `${latestValue.toFixed(0)} Pa`;
+      case 'T2MDEW':
+        return `${latestValue.toFixed(1)}°C`;
+      case 'SOILM0_10':
+        return `${latestValue.toFixed(3)} kg/m²`;
+      case 'SOILM10_40':
+        return `${latestValue.toFixed(3)} kg/m²`;
+      case 'RHMAX':
+        return `${latestValue.toFixed(1)}%`;
+      case 'RHMIN':
+        return `${latestValue.toFixed(1)}%`;
+      case 'T2M_MAX':
+        return `${latestValue.toFixed(1)}°C`;
+      case 'T2M_MIN':
+        return `${latestValue.toFixed(1)}°C`;
+      default:
+        return latestValue;
     }
   };
-
   if (!mapLocation || !weatherData) {
     return <div className="min-h-screen flex items-center justify-center"><p>Loading data or direct access not allowed...</p></div>;
   }
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       {/* Main Content */}
       <div className="w-full p-4 sm:p-6 lg:p-8">
         <header className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -100,10 +112,7 @@ const Analysis = () => {
                 <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Analysis Dashboard</h1>
                 <p className="text-sm sm:text-base text-foreground/80">{mapLocation.display_name}</p>
             </div>
-            <Button variant="outline" onClick={() => navigate(-1)} className="hover:scale-105 transition-all duration-300">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to Map
-            </Button>
+            
         </header>
 
         <main>
@@ -122,8 +131,6 @@ const Analysis = () => {
           </div>
         </main>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Analysis;
