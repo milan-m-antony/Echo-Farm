@@ -63,8 +63,8 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Fixed Background Globe */}
-      <div className="fixed inset-0 z-0 pointer-events-auto">
+      {/* Fixed Background Globe - Centered after sidebar */}
+      <div className="fixed inset-0 z-0 pointer-events-auto lg:left-64 transition-all duration-300">
         <RotatingEarth 
           width={typeof window !== 'undefined' ? window.innerWidth : 1920} 
           height={typeof window !== 'undefined' ? window.innerHeight : 1080}
@@ -73,16 +73,16 @@ const Dashboard = () => {
       </div>
 
       {/* Scrollable Content */}
-      <div className="relative z-10 pointer-events-none min-h-screen flex items-center justify-center px-6">
-        <div className="max-w-2xl w-full pointer-events-auto">
+      <div className="relative z-10 pointer-events-none min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <div className="max-w-2xl w-full pointer-events-auto animate-fade-in">
           {/* Welcome Card with Search */}
-          <Card className="bg-glass-heavy backdrop-blur-xl border border-glass-border shadow-2xl">
-            <CardContent className="p-8 space-y-6">
-              <div className="text-center space-y-2">
-                <h1 className="text-4xl font-bold">
+          <Card className="bg-glass-heavy backdrop-blur-xl border border-glass-border shadow-2xl hover:shadow-primary/20 transition-all duration-500 hover:scale-[1.02]">
+            <CardContent className="p-6 sm:p-8 space-y-6">
+              <div className="text-center space-y-2 animate-fade-in">
+                <h1 className="text-3xl sm:text-4xl font-bold transition-all duration-300 hover:scale-105">
                   Welcome to <span className="text-gradient">EchoFarm</span>
                 </h1>
-                <p className="text-foreground/80 text-lg">
+                <p className="text-foreground/80 text-base sm:text-lg">
                   Search for locations to explore agricultural data and insights
                 </p>
               </div>
@@ -98,7 +98,7 @@ const Dashboard = () => {
                     onFocus={() =>
                       searchResults.length > 0 && setShowSuggestions(true)
                     }
-                    className="pl-12 pr-12 h-14 text-lg bg-background/60 backdrop-blur-sm border-glass-border focus:bg-background/80 transition-all"
+                    className="pl-12 pr-12 h-12 sm:h-14 text-base sm:text-lg bg-background/60 backdrop-blur-sm border-glass-border focus:bg-background/80 transition-all duration-300 hover:border-primary/50 focus:scale-[1.02]"
                   />
                   {searching && (
                     <div className="absolute right-4 top-1/2 -translate-y-1/2">
@@ -108,12 +108,12 @@ const Dashboard = () => {
                 </div>
 
                 {showSuggestions && searchResults.length > 0 && (
-                  <div className="absolute z-50 w-full mt-2 bg-glass-heavy backdrop-blur-xl border border-glass-border rounded-lg shadow-2xl overflow-hidden max-h-80 overflow-y-auto">
+                  <div className="absolute z-50 w-full mt-2 bg-glass-heavy backdrop-blur-xl border border-glass-border rounded-lg shadow-2xl overflow-hidden max-h-80 overflow-y-auto animate-fade-in">
                     {searchResults.map((result, index) => (
                       <button
                         key={index}
                         onClick={() => handleLocationSelect(result)}
-                        className="w-full p-4 text-left hover:bg-background/40 border-b border-glass-border/50 last:border-b-0 transition-all group"
+                        className="w-full p-3 sm:p-4 text-left hover:bg-background/40 border-b border-glass-border/50 last:border-b-0 transition-all duration-300 group hover:scale-[1.02] hover:shadow-lg"
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1 pr-2">
