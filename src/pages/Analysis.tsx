@@ -35,16 +35,16 @@ const Analysis = () => {
   };
 
   const renderChart = (param: string, title: string, color: string, icon: React.ReactNode) => (
-    <Card className="bg-glass border-glass-border backdrop-blur-xl">
+    <Card className="bg-glass border-glass-border backdrop-blur-xl hover:scale-[1.02] transition-all duration-300 hover:shadow-lg">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
         {icon}
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">
+        <div className="text-xl sm:text-2xl font-bold">
           {getLatestValue(param)}
         </div>
-        <div className="h-[120px]">
+        <div className="h-[100px] sm:h-[120px]">
           <ChartContainer config={{}} className="h-full w-full">
             <AreaChart data={getChartData(param)} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
               <defs>
@@ -92,32 +92,22 @@ const Analysis = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background text-white flex">
-      {/* Sidebar */}
-      <aside className="w-64 bg-glass border-r border-glass-border p-4 space-y-4">
-        <h2 className="text-2xl font-bold text-gradient">EchoFarm</h2>
-        <div className="space-y-2">
-            <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/dashboard")}>Dashboard</Button>
-            <Button variant="secondary" className="w-full justify-start">Analysis</Button>
-            <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/gemini-analysis", { state: { location: mapLocation } })}>Gemini Analysis</Button>
-        </div>
-      </aside>
-
+    <div className="min-h-screen bg-background">
       {/* Main Content */}
-      <div className="flex-1 p-6">
-        <header className="mb-6 flex justify-between items-center">
+      <div className="w-full p-4 sm:p-6 lg:p-8">
+        <header className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-                <h1 className="text-3xl font-bold text-foreground">Analysis Dashboard</h1>
-                <p className="text-foreground/80">{mapLocation.display_name}</p>
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Analysis Dashboard</h1>
+                <p className="text-sm sm:text-base text-foreground/80">{mapLocation.display_name}</p>
             </div>
-            <Button variant="outline" onClick={() => navigate(-1)}>
+            <Button variant="outline" onClick={() => navigate(-1)} className="hover:scale-105 transition-all duration-300">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back to Map
             </Button>
         </header>
 
         <main>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {renderChart("T2M", "Temperature", "#FF5733", <Thermometer className="h-4 w-4 text-muted-foreground" />)}
             {renderChart("PRECTOT", "Precipitation", "#33A7FF", <CloudRain className="h-4 w-4 text-muted-foreground" />)}
             {renderChart("RH2M", "Relative Humidity", "#33FFF3", <Droplets className="h-4 w-4 text-muted-foreground" />)}
