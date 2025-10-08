@@ -95,9 +95,9 @@ Provide practical, region-specific advice that farmers can immediately act upon.
 
     console.log('Calling Hugging Face API...');
 
-    // Using Meta Llama 3.1 for better agricultural analysis
+    // Using Mistral for better agricultural analysis
     const response = await fetch(
-      "https://api-inference.huggingface.co/models/meta-llama/Llama-3.2-3B-Instruct",
+      "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2",
       {
         method: "POST",
         headers: {
