@@ -11,7 +11,6 @@ const DashboardLayout = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [showMenuButton, setShowMenuButton] = useState(true);
 
   useEffect(() => {
     // Check if user is authenticated
@@ -34,25 +33,6 @@ const DashboardLayout = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
-  useEffect(() => {
-    let lastScrollY = window.scrollY;
-    
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      
-      if (currentScrollY > lastScrollY && currentScrollY > 50) {
-        setShowMenuButton(true);
-      } else if (currentScrollY < 10) {
-        setShowMenuButton(true);
-      }
-      
-      lastScrollY = currentScrollY;
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate("/");
@@ -74,12 +54,7 @@ const DashboardLayout = () => {
       {/* Mobile Menu Button - Fixed position outside sidebar */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
-        className={`
-          fixed top-4 right-4 z-50 lg:hidden p-2 rounded-lg 
-          bg-glass-heavy backdrop-blur-xl border border-glass-border 
-          hover:bg-glass transition-all duration-300 hover:scale-110 shadow-lg
-          ${showMenuButton ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}
-        `}
+        className="fixed top-4 right-4 z-50 lg:hidden p-2 rounded-lg bg-glass-heavy backdrop-blur-xl border border-glass-border hover:bg-glass transition-all duration-300 hover:scale-110 shadow-lg"
       >
         {sidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
       </button>
