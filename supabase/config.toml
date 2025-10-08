@@ -1,1 +1,4 @@
 project_id = "avfbdbssgukyarwvxvgx"
+
+[functions.analyze-crop-data]
+verify_jwt = false

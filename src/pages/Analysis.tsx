@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Thermometer, CloudRain, Droplets, Wind, Sun, TrendingUp } from "lucide-react";
+import { ArrowLeft, Thermometer, CloudRain, Droplets, Wind, Sun, TrendingUp, Sparkles } from "lucide-react";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 const Analysis = () => {
@@ -104,6 +104,66 @@ const Analysis = () => {
   if (!mapLocation || !weatherData) {
     return <div className="min-h-screen flex items-center justify-center"><p>Loading data or direct access not allowed...</p></div>;
   }
+
+  // Calculate weather summary for AI analysis
+  const calculateWeatherSummary = () => {
+    const params = weatherData?.properties?.parameter;
+    if (!params) return null;
+
+    const calculateAvg = (paramKey: string) => {
+      const data = params[paramKey];
+      if (!data) return null;
+      const values = Object.values(data) as number[];
+      return values.reduce((a, b) => a + b, 0) / values.length;
+    };
+
+    const calculateSum = (paramKey: string) => {
+      const data = params[paramKey];
+      if (!data) return null;
+      const values = Object.values(data) as number[];
+      return values.reduce((a, b) => a + b, 0);
+    };
+
+    const calculateMin = (paramKey: string) => {
+      const data = params[paramKey];
+      if (!data) return null;
+      const values = Object.values(data) as number[];
+      return Math.min(...values);
+    };
+
+    const calculateMax = (paramKey: string) => {
+      const data = params[paramKey];
+      if (!data) return null;
+      const values = Object.values(data) as number[];
+      return Math.max(...values);
+    };
+
+    return {
+      avgTemp: calculateAvg('T2M'),
+      minTemp: calculateMin('T2M_MIN'),
+      maxTemp: calculateMax('T2M_MAX'),
+      totalPrecip: calculateSum('PRECTOTCORR') || calculateSum('PRECTOT'),
+      avgHumidity: calculateAvg('RH2M'),
+      avgWindSpeed: calculateAvg('WS10M'),
+      avgSolar: calculateAvg('ALLSKY_SFC_SW_DWN'),
+      avgPressure: calculateAvg('PS'),
+    };
+  };
+
+  const handleAIAnalysis = () => {
+    const weatherSummary = calculateWeatherSummary();
+    navigate('/gemini-analysis', {
+      state: {
+        location: {
+          lat: mapLocation.lat,
+          lon: mapLocation.lon,
+          name: mapLocation.display_name,
+          type: mapLocation.type || 'agricultural',
+        },
+        weatherData: weatherSummary,
+      },
+    });
+  };
   return <div className="min-h-screen bg-background">
       {/* Main Content */}
       <div className="w-full p-4 sm:p-6 lg:p-8">
@@ -112,7 +172,13 @@ const Analysis = () => {
                 <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Analysis Dashboard</h1>
                 <p className="text-sm sm:text-base text-foreground/80">{mapLocation.display_name}</p>
             </div>
-            
+            <Button 
+              onClick={handleAIAnalysis}
+              className="bg-gradient-eco hover:scale-105 transition-all duration-300 shadow-lg"
+            >
+              <Sparkles className="mr-2 h-4 w-4" />
+              AI Crop Analysis
+            </Button>
         </header>
 
         <main>
