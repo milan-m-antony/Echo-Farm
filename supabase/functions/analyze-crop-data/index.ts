@@ -22,9 +22,9 @@ serve(async (req) => {
       );
     }
 
-    const hfToken = Deno.env.get('HUGGING_FACE_ACCESS_TOKEN');
-    if (!hfToken) {
-      console.error('HUGGING_FACE_ACCESS_TOKEN not configured');
+    const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
+    if (!lovableApiKey) {
+      console.error('LOVABLE_API_KEY not configured');
       return new Response(
         JSON.stringify({ error: 'API configuration error' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -93,32 +93,29 @@ Provide a multi-season rotation plan to maintain soil health and maximize produc
 
 Provide practical, region-specific advice that farmers can immediately act upon.`;
 
-    console.log('Calling Hugging Face API...');
+    console.log('Calling Lovable AI Gateway with Gemini...');
 
-    // Using Mistral for better agricultural analysis
+    // Using Gemini via Lovable AI Gateway (free and reliable)
     const response = await fetch(
-      "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2",
+      "https://ai.gateway.lovable.dev/v1/chat/completions",
       {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${hfToken}`,
+          "Authorization": `Bearer ${lovableApiKey}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          inputs: prompt,
-          parameters: {
-            max_new_tokens: 2000,
-            temperature: 0.7,
-            top_p: 0.9,
-            return_full_text: false,
-          },
+          model: "google/gemini-2.5-flash",
+          messages: [
+            { role: "user", content: prompt }
+          ],
         }),
       }
     );
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Hugging Face API error:', response.status, errorText);
+      console.error('Lovable AI Gateway error:', response.status, errorText);
       return new Response(
         JSON.stringify({ 
           error: 'AI analysis failed', 
@@ -129,9 +126,9 @@ Provide practical, region-specific advice that farmers can immediately act upon.
     }
 
     const data = await response.json();
-    console.log('Received response from Hugging Face');
+    console.log('Received response from Lovable AI Gateway');
     
-    const analysisText = data[0]?.generated_text || data.generated_text || 'No analysis generated';
+    const analysisText = data.choices?.[0]?.message?.content || 'No analysis generated';
 
     return new Response(
       JSON.stringify({
