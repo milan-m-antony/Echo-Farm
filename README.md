@@ -1,73 +1,154 @@
-# Welcome to your Lovable project
+# Agricultural Analysis Platform
 
-## Project info
+An AI-powered agricultural analysis platform that provides crop recommendations, weather insights, and farming suggestions based on real-time NASA POWER weather data and location information.
 
-**URL**: https://lovable.dev/projects/8c663ad8-e94d-45b3-af5a-b1205b0aad0a
+## Features
 
-## How can I edit this code?
+- 🌍 **Interactive Map**: Search and select any location worldwide
+- 🌤️ **Real-time Weather Data**: Integration with NASA POWER API for accurate agricultural weather data
+- 🤖 **AI-Powered Analysis**: Smart crop recommendations using Lovable AI Gateway with Gemini
+- 📊 **Weather Visualization**: Interactive charts showing temperature, precipitation, humidity, wind speed, and more
+- 🌱 **Crop Recommendations**: Detailed agricultural advice including:
+  - Best crops for your location and climate
+  - Optimal planting seasons
+  - Soil and water management strategies
+  - Climate adaptation recommendations
+  - Crop rotation suggestions
+  - Profitability analysis
+- 📝 **Smart Summaries**: Generate concise key points from detailed analysis
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+- **Frontend**: React 19, TypeScript, Tailwind CSS
+- **Backend**: Lovable Cloud (Supabase)
+- **AI**: Lovable AI Gateway (Google Gemini 2.5 Flash)
+- **Maps**: Leaflet & React Leaflet
+- **Charts**: Recharts
+- **Weather Data**: NASA POWER API
+- **Location Search**: Nominatim (OpenStreetMap)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/8c663ad8-e94d-45b3-af5a-b1205b0aad0a) and start prompting.
+## Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js 18+ or Bun
+- A Lovable account (for deployment and AI features)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+1. Clone the repository:
+```bash
+git clone <your-repo-url>
+cd <project-folder>
 ```
 
-**Edit a file directly in GitHub**
+2. Install dependencies:
+```bash
+npm install
+# or
+bun install
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+3. Start the development server:
+```bash
+npm run dev
+# or
+bun run dev
+```
 
-**Use GitHub Codespaces**
+The app will be available at `http://localhost:8080`
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Environment Variables
 
-## What technologies are used for this project?
+This project uses Lovable Cloud, which automatically configures the following environment variables:
 
-This project is built with:
+- `VITE_SUPABASE_URL` - Supabase project URL
+- `VITE_SUPABASE_PUBLISHABLE_KEY` - Supabase publishable key
+- `VITE_SUPABASE_PROJECT_ID` - Supabase project ID
+- `LOVABLE_API_KEY` - Automatically provisioned for AI features (server-side only)
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+**Note**: These variables are auto-generated and managed by Lovable Cloud. You don't need to configure them manually.
 
-## How can I deploy this project?
+### Local Development
 
-Simply open [Lovable](https://lovable.dev/projects/8c663ad8-e94d-45b3-af5a-b1205b0aad0a) and click on Share -> Publish.
+For local development, the `.env` file is automatically created and populated when you connect to Lovable Cloud. The `LOVABLE_API_KEY` is securely stored as a Supabase secret and only accessible by backend edge functions.
 
-## Can I connect a custom domain to my Lovable project?
+## Usage
 
-Yes, you can!
+1. **Search Location**: Use the search bar on the dashboard to find any location worldwide
+2. **View Weather Data**: Navigate to the Analysis page to see detailed weather charts
+3. **Get AI Recommendations**: Click "AI Crop Analysis" to receive comprehensive agricultural recommendations
+4. **Generate Summary**: Use the "Generate Summary" button to get key points from the detailed analysis
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Project Structure
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+```
+├── src/
+│   ├── components/        # Reusable UI components
+│   ├── pages/            # Main application pages
+│   │   ├── Dashboard.tsx # Main dashboard with map
+│   │   ├── Analysis.tsx  # Weather data visualization
+│   │   └── GeminiAnalysis.tsx # AI-powered recommendations
+│   ├── integrations/     # API integrations
+│   │   ├── supabase/     # Supabase client (auto-generated)
+│   │   └── geminiClient.ts # AI analysis client
+│   └── layouts/          # Layout components
+├── supabase/
+│   └── functions/
+│       └── analyze-crop-data/ # Edge function for AI analysis
+└── public/              # Static assets
+```
+
+## Edge Functions
+
+The project includes a backend edge function that handles AI analysis:
+
+- **analyze-crop-data**: Processes location and weather data, calls the Lovable AI Gateway, and returns comprehensive agricultural recommendations
+
+Edge functions are automatically deployed when you push changes through Lovable.
+
+## API Integrations
+
+### NASA POWER API
+Provides historical and real-time weather data for agricultural analysis:
+- Temperature (min, max, average)
+- Precipitation
+- Humidity
+- Wind Speed
+- Solar Radiation
+- Atmospheric Pressure
+
+### Nominatim (OpenStreetMap)
+Used for location search and geocoding.
+
+### Lovable AI Gateway
+Provides access to Google Gemini 2.5 Flash for generating intelligent crop recommendations without requiring API key configuration.
+
+## Deployment
+
+This project is designed to be deployed on Lovable:
+
+1. Click the "Publish" button in the Lovable editor
+2. Your app will be deployed with a custom Lovable URL
+3. Optionally connect a custom domain in Project Settings
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is open source and available under the MIT License.
+
+## Support
+
+For issues or questions:
+- Check the [Lovable documentation](https://docs.lovable.dev/)
+- Join the [Lovable Discord community](https://discord.com/channels/1119885301872070706/1280461670979993613)
+- Contact support through the Lovable platform
+
+## Acknowledgments
+
+- Weather data provided by [NASA POWER](https://power.larc.nasa.gov/)
+- Location services by [OpenStreetMap](https://www.openstreetmap.org/)
+- AI capabilities powered by Lovable AI Gateway and Google Gemini

@@ -7,6 +7,7 @@ export async function getCropRecommendations(
   locationType?: string,
   weatherData?: any
 ) {
+  const { summarize, ...cleanWeatherData } = weatherData || {};
   try {
     const { data, error } = await supabase.functions.invoke('analyze-crop-data', {
       body: {
@@ -16,7 +17,8 @@ export async function getCropRecommendations(
           name: locationName,
           type: locationType,
         },
-        weatherData,
+        weatherData: cleanWeatherData,
+        summarize: summarize || false,
       },
     });
 

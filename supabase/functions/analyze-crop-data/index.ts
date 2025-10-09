@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { location, weatherData } = await req.json();
+    const { location, weatherData, summarize } = await req.json();
     
     console.log('Received analysis request for:', location);
     
@@ -43,7 +43,16 @@ Recent Weather Data:
 - Atmospheric Pressure: ${weatherData.avgPressure || 'N/A'} kPa
 ` : 'No weather data available';
 
-    const prompt = `You are an expert agricultural advisor. Analyze the following location and weather data to provide comprehensive farming recommendations.
+    const prompt = summarize 
+      ? `Summarize the following agricultural analysis into 5-7 key bullet points focusing on: best crops, optimal planting times, critical weather considerations, and top actionable recommendations.
+
+Location: ${location.name || 'Unknown'}
+Coordinates: Latitude ${location.lat}, Longitude ${location.lon}
+
+${weatherSummary}
+
+Provide only the key points as bullet points.`
+      : `You are an expert agricultural advisor. Analyze the following location and weather data to provide comprehensive farming recommendations.
 
 Location: ${location.name || 'Unknown'}
 Coordinates: Latitude ${location.lat}, Longitude ${location.lon}
