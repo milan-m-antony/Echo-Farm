@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Sparkles, Loader2 } from "lucide-react";
 import { getCropRecommendations } from "@/integrations/geminiClient";
 import { Progress } from "@/components/ui/progress";
+import { ChatInterface } from "@/components/ChatInterface";
 
 const GeminiAnalysis = () => {
   const location = useLocation();
@@ -276,6 +277,19 @@ const GeminiAnalysis = () => {
             )}
           </CardContent>
         </Card>
+
+        {cropData && (
+          <ChatInterface 
+            locationData={{
+              lat,
+              lon,
+              name: locationName,
+              type: locationType
+            }}
+            weatherData={weatherData}
+            analysisContext={cropData.analysis}
+          />
+        )}
       </div>
     </div>
   );

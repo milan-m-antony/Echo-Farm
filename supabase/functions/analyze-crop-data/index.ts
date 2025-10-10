@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { location, weatherData, summarize } = await req.json();
+    const { location, weatherData, summarize, chatMode, analysisContext, messages } = await req.json();
     
     console.log('Received analysis request for:', location);
     
@@ -43,16 +43,41 @@ Recent Weather Data:
 - Atmospheric Pressure: ${weatherData.avgPressure || 'N/A'} kPa
 ` : 'No weather data available';
 
-    const prompt = summarize 
-      ? `Summarize the following agricultural analysis into 5-7 key bullet points focusing on: best crops, optimal planting times, critical weather considerations, and top actionable recommendations.
+    let prompt: string = "";
+    let chatMessages: any[] = [];
+
+    if (chatMode && messages && messages.length > 0) {
+      // Chat mode: answer specific questions based on the analysis context
+      const systemPrompt = `You are an expert agricultural advisor helping farmers with their crops. 
+
+Location Context:
+- Location: ${location.name || 'Unknown'}
+- Coordinates: Latitude ${location.lat}, Longitude ${location.lon}
+${weatherSummary}
+
+Previous Analysis:
+${analysisContext || 'No previous analysis available'}
+
+Provide clear, concise, and practical answers to the farmer's questions based on this data. Keep responses focused and actionable.`;
+
+      chatMessages = [
+        { role: "system", content: systemPrompt },
+        ...messages.map((msg: any) => ({
+          role: msg.role,
+          content: msg.content
+        }))
+      ];
+    } else if (summarize) {
+      prompt = `Summarize the following agricultural analysis into 5-7 key bullet points focusing on: best crops, optimal planting times, critical weather considerations, and top actionable recommendations.
 
 Location: ${location.name || 'Unknown'}
 Coordinates: Latitude ${location.lat}, Longitude ${location.lon}
 
 ${weatherSummary}
 
-Provide only the key points as bullet points.`
-      : `You are an expert agricultural advisor. Analyze the following location and weather data to provide comprehensive farming recommendations.
+Provide only the key points as bullet points.`;
+    } else {
+      prompt = `You are an expert agricultural advisor. Analyze the following location and weather data to provide comprehensive farming recommendations.
 
 Location: ${location.name || 'Unknown'}
 Coordinates: Latitude ${location.lat}, Longitude ${location.lon}
@@ -101,10 +126,23 @@ Provide a multi-season rotation plan to maintain soil health and maximize produc
 - Common mistakes to avoid
 
 Provide practical, region-specific advice that farmers can immediately act upon.`;
+    }
 
     console.log('Calling Lovable AI Gateway with Gemini...');
 
     // Using Gemini via Lovable AI Gateway (free and reliable)
+    const requestBody = chatMode 
+      ? {
+          model: "google/gemini-2.5-flash",
+          messages: chatMessages,
+        }
+      : {
+          model: "google/gemini-2.5-flash",
+          messages: [
+            { role: "user", content: prompt }
+          ],
+        };
+
     const response = await fetch(
       "https://ai.gateway.lovable.dev/v1/chat/completions",
       {
@@ -113,12 +151,7 @@ Provide practical, region-specific advice that farmers can immediately act upon.
           "Authorization": `Bearer ${lovableApiKey}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
-          messages: [
-            { role: "user", content: prompt }
-          ],
-        }),
+        body: JSON.stringify(requestBody),
       }
     );
 
